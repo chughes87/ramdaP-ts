@@ -1,4 +1,4 @@
-import { pipeWith, PipeWithFns, curry } from 'ramda';
+import { pipeWith, PipeWithFns, curry, pipe, map, andThen, flatten } from 'ramda';
 
 export const resolve = <T>(x: T): Promise<T> => Promise.resolve(x);
 
@@ -35,3 +35,29 @@ export const serialMap = <I, O>(fn: (arg: I) => Promise<O>) => (xs: I[]): Promis
       }),
     Promise.resolve([]),
   );
+
+export const delayMap =
+  <I, O>(sleepMs: number, fn: (arg: I) => Promise<O>) =>
+  (xs: I[]): Promise<Promise<O>[]> =>
+    xs.reduce(
+      (responses: Promise<Promise<O>[]>, x) =>
+        responses.then(async (rs: Promise<O>[]) => {
+          const promise = fn(x);
+          if (sleepMs > 0) {
+            await sleep(sleepMs);
+          }
+
+          return [...rs, promise];
+        }),
+      Promise.resolve([]),
+    );
+
+export const chainP = <I, O>(fn: (x: I) => Promise<O>) =>
+  pipe(map(fn), promiseAll, andThen(flatten));
+
+export const longZip = (fn: Function) => (xs: unknown[], ys: unknown[]) => {
+  const longer = xs.length > ys.length ? xs : ys;
+  const shorter = xs.length > ys.length ? ys : xs;
+
+  return longer.map((ls, i) => fn(ls, shorter[i]));
+};
