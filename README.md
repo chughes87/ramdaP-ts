@@ -1,1 +1,1 @@
-Just putting these somewhere that's easily accessible to me for various projects.
+TypeScript ramda utility functions for dealing with Promises (and a few misc others)
