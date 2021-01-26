@@ -1,10 +1,28 @@
 {
-  "name": "ramdaP",
+  "name": "ramdap-ts",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Charles Hughes <charleshu@zillowgroup.com>",
   "license": "MIT",
   "dependencies": {
     "ramda": "^0.27.1"
-  }
+  },
+  "description": "Just putting these somewhere that's easily accessible to me for various projects.",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chughes87/ramdaP-ts.git"
+  },
+  "keywords": [
+    "ramda",
+    "typescript",
+    "functional"
+  ],
+  "bugs": {
+    "url": "https://github.com/chughes87/ramdaP-ts/issues"
+  },
+  "homepage": "https://github.com/chughes87/ramdaP-ts#readme"
 }
