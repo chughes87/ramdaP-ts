@@ -1,6 +1,6 @@
 {
   "name": "@charles-inc/ramdap-ts",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "author": "Charles Hughes <charleshu@zillowgroup.com>",
   "license": "MIT",
