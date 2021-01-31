@@ -1,4 +1,4 @@
-import { pipeWith, PipeWithFns, curry, pipe, map, andThen, flatten } from 'ramda';
+import { pipeWith, PipeWithFns, pipe, map, andThen, flatten, view, set, Lens } from 'ramda';
 
 export const resolve = <T>(x: T): Promise<T> => Promise.resolve(x);
 
@@ -21,8 +21,6 @@ export const errorLogTapP = (message: string) => (error: Error): Promise<Error> 
   console.log(`${message}, ${error.message}, ${error.stack}`);
   return Promise.reject(error);
 };
-
-export const log = curry((tag, data) => console.log(`${tag}: ${JSON.stringify(data)}`));
 
 export const serialMap = <I, O>(fn: (arg: I) => Promise<O>) => (xs: I[]): Promise<Promise<O>[]> =>
   xs.reduce(
@@ -55,9 +53,9 @@ export const delayMap =
 export const chainP = <I, O>(fn: (x: I) => Promise<O>) =>
   pipe(map(fn), promiseAll, andThen(flatten));
 
-export const longZip = (fn: Function) => (xs: unknown[], ys: unknown[]) => {
-  const longer = xs.length > ys.length ? xs : ys;
-  const shorter = xs.length > ys.length ? ys : xs;
-
-  return longer.map((ls, i) => fn(ls, shorter[i]));
-};
+export const overP = <I, V>(lens: Lens<I, V>, fn: (x: unknown) => Promise<V>) => (obj: I) =>
+  pipe(
+    view(lens),
+    fn,
+    andThen((value: V): I => set<I, V>(lens, value, obj)),
+  )(obj);

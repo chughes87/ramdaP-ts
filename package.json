@@ -1,11 +1,15 @@
 {
-  "name": "ramdap-ts",
+  "name": "@charles-inc/ramdap-ts",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Charles Hughes <charleshu@zillowgroup.com>",
   "license": "MIT",
   "dependencies": {
-    "ramda": "^0.27.1"
+    "@types/node": "^14.14.22",
+    "@types/ramda": "^0.27.36",
+    "eslint": "^7.18.0",
+    "ramda": "^0.27.1",
+    "typescript": "^4.1.3"
   },
   "description": "Just putting these somewhere that's easily accessible to me for various projects.",
   "devDependencies": {},
