@@ -53,9 +53,10 @@ export const delayMap =
 export const chainP = <I, O>(fn: (x: I) => Promise<O>) =>
   pipe(map(fn), promiseAll, andThen(flatten));
 
-export const overP = <I, V>(lens: Lens<I, V>, fn: (x: unknown) => Promise<V>) => (obj: I) =>
-  pipe(
-    view(lens),
-    fn,
-    andThen((value: V): I => set<I, V>(lens, value, obj)),
-  )(obj);
+export const overP =
+  <I, V>(lens: Lens<I, V>, fn: (x: unknown) => Promise<V>) => (obj: I): Promise<I> =>
+    pipe(
+      view(lens),
+      fn,
+      andThen((value: V): I => set<I, V>(lens, value, obj)),
+    )(obj);
