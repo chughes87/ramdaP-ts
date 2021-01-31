@@ -7,12 +7,14 @@ export const promiseAll = <T>(ps: Promise<T>[]): Promise<T[]> => Promise.all(ps)
 export const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export const pipeP = <I, O>(fns: PipeWithFns<I, Promise<O>>) =>
-  pipeWith<I, Promise<O>>(
-    (fn: (value: unknown) => unknown, res: unknown) =>
-      res instanceof Promise ? res.then(fn) : fn(res),
-    fns,
-  );
+export const pipeP = <I, O>(fns: PipeWithFns<I, Promise<O>>, onError?: (reason: Error) => Promise<O>) => (
+    input: I,
+  ) =>
+    pipeWith<I, Promise<O>>(
+      (fn: (value: unknown) => unknown, res: unknown) =>
+        res instanceof Promise ? res.then((x) => fn(x)) : Promise.resolve(fn(res)),
+      fns,
+    )(input).catch(onError);
 
 export const tapP = <T>(fn: (x: T) => Promise<unknown>) => (data: T): Promise<unknown> =>
   fn(data).then(() => data);

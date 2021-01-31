@@ -24,14 +24,30 @@ describe('ramdaP-ts', () => {
     expect(result).resolves.toEqual(['FOO', 'bar', 'baz']);
   });
 
-  test('pipeP', () => {
-    const result = pipeP<number, number>([
-      dec,
-      (x: number) => Promise.resolve(negate(x)),
-      (y: number) => Promise.resolve(inc(y)),
-    ])(4);
+  describe('pipeP', () => {
+    it('should handle resolves', () => {
+      const result = pipeP<number, number>([
+        dec,
+        (x: number) => Promise.resolve(negate(x)),
+        (y: number) => Promise.resolve(inc(y)),
+      ])(4);
 
-    expect(result).resolves.toEqual(-2);
+      expect(result).resolves.toEqual(-2);
+    });
+
+    it('should handle rejects', () => {
+      const mockError = 'oops';
+      const mockMod = 'ie';
+      const result = pipeP<number, number>([
+          dec,
+          () => Promise.reject(new Error(mockError)),
+          (y: number) => Promise.resolve(inc(y)),
+        ],
+        ((e: Error) => Promise.reject(e.message + mockMod))
+      )(4);
+
+      expect(result).rejects.toEqual(mockError + mockMod);
+    });
   });
 
   test('tapP', () => {
