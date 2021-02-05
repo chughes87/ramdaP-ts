@@ -1,4 +1,4 @@
-import { pipeWith, PipeWithFns, pipe, map, andThen, flatten, view, set, Lens } from 'ramda';
+import { pipeWith, pipe, map, andThen, flatten, view, set, PipeWithFns, Lens } from 'ramda';
 
 export const resolve = <T>(x: T): Promise<T> => Promise.resolve(x);
 
@@ -24,11 +24,11 @@ export const errorLogTapP = (message: string) => (error: Error): Promise<Error> 
   return Promise.reject(error);
 };
 
-export const serialMap = <I, O>(fn: (arg: I) => Promise<O>) => (xs: I[]): Promise<Promise<O>[]> =>
+export const serialMap = <I, O>(fn: (arg: I, index?: number) => Promise<O>) => (xs: I[]): Promise<Promise<O>[]> =>
   xs.reduce(
-    (responses: Promise<Promise<O>[]>, x) =>
+    (responses: Promise<Promise<O>[]>, x, index) =>
       responses.then((rs: Promise<O>[]) => {
-        const promise = fn(x);
+        const promise = fn(x, index);
         return promise
           .then(() => [...rs, promise])
           .catch((e) => [...rs, Promise.reject(e)]);
@@ -37,12 +37,12 @@ export const serialMap = <I, O>(fn: (arg: I) => Promise<O>) => (xs: I[]): Promis
   );
 
 export const delayMap =
-  <I, O>(sleepMs: number, fn: (arg: I) => Promise<O>) =>
+  <I, O>(sleepMs: number, fn: (arg: I, index?: number) => Promise<O>) =>
   (xs: I[]): Promise<Promise<O>[]> =>
     xs.reduce(
-      (responses: Promise<Promise<O>[]>, x) =>
+      (responses: Promise<Promise<O>[]>, x, index) =>
         responses.then(async (rs: Promise<O>[]) => {
-          const promise = fn(x);
+          const promise = fn(x, index);
           if (sleepMs > 0) {
             await sleep(sleepMs);
           }

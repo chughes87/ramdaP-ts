@@ -6,7 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "@types/ramda": "^0.27.36",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "ramda-debug": "^0.1.4"
   },
   "description": "Just putting these somewhere that's easily accessible to me for various projects.",
   "devDependencies": {

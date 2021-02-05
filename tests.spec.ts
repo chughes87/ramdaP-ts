@@ -6,6 +6,7 @@ import {
   overP,
   pipeP,
   tapP,
+  sleep,
 } from './index';
 
 describe('ramdaP-ts', () => {
@@ -55,4 +56,39 @@ describe('ramdaP-ts', () => {
 
     expect(result).resolves.toEqual(1);
   });
+  jest.useFakeTimers();
+
+  describe('serialMap', () => {
+    it('should execute the promise returning functions provided in a strictly serial manner', async () => {
+      const resolvers: ((value?: string) => void)[] = [];
+      let latestCall = null;
+
+      // const result = serialMap((x: number, index: number) => {
+      //   console.log('in the map');
+      //   latestCall = index;
+      //   return new Promise((resolve: (value: string) => void) => resolvers.push(resolve));
+      // })([1, 2, 3]);
+      await sleep(0);
+      console.log(JSON.stringify(resolvers));
+      // expect(latestCall).toBe(0);
+      // console.log('end');
+      // resolvers[0]();
+      // expect(latestCall).toBe(1);
+      // resolvers[1]();
+      // expect(latestCall).toBe(2);
+      // resolvers[2]('woot');
+      // expect(result).resolves.toEqual('woot');
+    });
+  });
+
+  // describe("delayMap", () => {
+  //   test("does something after 200ms", () => {
+  //     const doSomething = jest.fn();
+
+
+  //     jest.advanceTimersByTime(1);
+
+  //     expect(doSomething).toHaveBeenCalled();
+  //   });
+  // });
 });
